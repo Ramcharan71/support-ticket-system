@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { Routes, Route, NavLink } from 'react-router-dom';
 import TicketForm from './components/TicketForm';
 import TicketList from './components/TicketList';

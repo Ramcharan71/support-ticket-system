@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { getTickets, updateTicket } from '../api/tickets';
 
 const CATEGORIES = ['', 'billing', 'technical', 'account', 'general'];
@@ -28,7 +28,9 @@ function TicketList({ refreshKey }) {
     status: '',
     search: '',
   });
+  const [searchInput, setSearchInput] = useState('');
   const [editingId, setEditingId] = useState(null);
+  const searchTimer = useRef(null);
 
   const fetchTickets = useCallback(async () => {
     setLoading(true);
@@ -53,6 +55,14 @@ function TicketList({ refreshKey }) {
 
   const handleFilterChange = (key, value) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const handleSearchChange = (value) => {
+    setSearchInput(value);
+    if (searchTimer.current) clearTimeout(searchTimer.current);
+    searchTimer.current = setTimeout(() => {
+      setFilters((prev) => ({ ...prev, search: value }));
+    }, 400);
   };
 
   const handleStatusChange = async (ticketId, newStatus) => {
@@ -90,8 +100,8 @@ function TicketList({ refreshKey }) {
         <input
           type="text"
           placeholder="Search tickets..."
-          value={filters.search}
-          onChange={(e) => handleFilterChange('search', e.target.value)}
+          value={searchInput}
+          onChange={(e) => handleSearchChange(e.target.value)}
           className="search-input"
         />
         <select
