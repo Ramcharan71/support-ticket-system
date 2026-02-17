@@ -5,6 +5,13 @@ import { useClassify } from '../hooks/useClassify';
 const CATEGORIES = ['billing', 'technical', 'account', 'general'];
 const PRIORITIES = ['low', 'medium', 'high', 'critical'];
 
+const PRIORITY_COLORS = {
+  low: '#28a745',
+  medium: '#ffc107',
+  high: '#fd7e14',
+  critical: '#dc3545',
+};
+
 function TicketForm({ onTicketCreated }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -13,6 +20,7 @@ function TicketForm({ onTicketCreated }) {
   const [submitting, setSubmitting] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
+  const [createdTicket, setCreatedTicket] = useState(null);
   const [userTouchedCategory, setUserTouchedCategory] = useState(false);
   const [userTouchedPriority, setUserTouchedPriority] = useState(false);
 
@@ -43,6 +51,7 @@ function TicketForm({ onTicketCreated }) {
     try {
       const ticket = await createTicket({ title, description, category, priority });
       setSuccessMsg(`Ticket #${ticket.id} created successfully!`);
+      setCreatedTicket(ticket);
       setTitle('');
       setDescription('');
       setCategory('general');
@@ -162,6 +171,30 @@ function TicketForm({ onTicketCreated }) {
           {submitting ? 'Submitting...' : 'Submit Ticket'}
         </button>
       </form>
+
+      {createdTicket && (
+        <div className="created-ticket">
+          <h3>Recently Created Ticket</h3>
+          <div className="ticket-card">
+            <div className="ticket-card-header">
+              <h3 className="ticket-title">{createdTicket.title}</h3>
+              <span
+                className="priority-badge"
+                style={{ backgroundColor: PRIORITY_COLORS[createdTicket.priority] }}
+              >
+                {createdTicket.priority.toUpperCase()}
+              </span>
+            </div>
+            <p className="ticket-description">{createdTicket.description}</p>
+            <div className="ticket-card-footer">
+              <span className="category-badge">{createdTicket.category}</span>
+              <span className={`status-badge status-${createdTicket.status}`}>
+                {createdTicket.status === 'in_progress' ? 'In Progress' : createdTicket.status.charAt(0).toUpperCase() + createdTicket.status.slice(1)}
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
