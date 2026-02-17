@@ -18,6 +18,9 @@ done
 
 echo "PostgreSQL is ready!"
 
+echo "Making migrations..."
+python manage.py makemigrations --no-input
+
 echo "Running migrations..."
 python manage.py migrate --no-input
 
