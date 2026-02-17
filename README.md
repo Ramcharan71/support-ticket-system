@@ -23,13 +23,13 @@ A full-stack support ticket management system with AI-powered ticket classificat
 ```bash
 # Clone the repository
 git clone <repo-url>
-cd Clootrack_Assignment
+cd support-ticket-system
 
-# Set your Gemini API key (optional — app works without it)
-# Copy .env.example to .env and fill in your key
-cp .env.example .env
+# (Optional) Set your Gemini API key for AI classification
+# Create a .env file with your key — or skip this step (app works without it)
+echo "GEMINI_API_KEY=your_key_here" > .env
 
-# Start all services
+# Start all services (one command — no other setup needed)
 docker-compose up --build
 ```
 
@@ -37,20 +37,17 @@ The application will be available at:
 - **Frontend:** http://localhost:3000
 - **Backend API:** http://localhost:8000/api/
 
-> **Note:** The app is fully functional without a Gemini API key. The AI classification feature will gracefully degrade — users can manually select category and priority.
+> **Note:** No additional manual setup is required. The database is created, migrations run, and the server starts automatically. The app is fully functional without a Gemini API key — AI classification will gracefully degrade and users can manually select category and priority.
 
 ### Getting a Gemini API Key
 
 1. Visit [Google AI Studio](https://aistudio.google.com/apikey)
 2. Create a free API key
-3. Set it as an environment variable before running `docker-compose up`:
-   ```bash
-   export GEMINI_API_KEY=your_key_here
+3. Add it to a `.env` file in the project root:
    ```
-   Or on Windows PowerShell:
-   ```powershell
-   $env:GEMINI_API_KEY="your_key_here"
+   GEMINI_API_KEY=your_key_here
    ```
+4. Then run `docker-compose up --build` — the key is picked up automatically
 
 ## Architecture
 
