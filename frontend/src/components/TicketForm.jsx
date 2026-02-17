@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { createTicket } from '../api/tickets';
 import { useClassify } from '../hooks/useClassify';
 
@@ -24,7 +24,12 @@ function TicketForm({ onTicketCreated }) {
   const [userTouchedCategory, setUserTouchedCategory] = useState(false);
   const [userTouchedPriority, setUserTouchedPriority] = useState(false);
 
-  const { classify, isClassifying, suggestion, error: classifyError, resetSuggestion } = useClassify();
+  const { classify, isClassifying, suggestion, error: classifyError, resetSuggestion, cleanup } = useClassify();
+
+  // Cleanup classify debounce timer on unmount
+  useEffect(() => {
+    return cleanup;
+  }, [cleanup]);
 
   // Apply AI suggestions when they arrive (unless user manually changed)
   useEffect(() => {

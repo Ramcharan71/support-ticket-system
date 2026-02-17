@@ -53,6 +53,13 @@ function TicketList({ refreshKey }) {
     fetchTickets();
   }, [fetchTickets, refreshKey]);
 
+  // Cleanup search debounce timer on unmount
+  useEffect(() => {
+    return () => {
+      if (searchTimer.current) clearTimeout(searchTimer.current);
+    };
+  }, []);
+
   const handleFilterChange = (key, value) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
   };

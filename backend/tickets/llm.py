@@ -11,7 +11,8 @@ import json
 import logging
 import os
 
-import google.generativeai as genai
+from google import genai
+from google.genai import types
 
 logger = logging.getLogger(__name__)
 
@@ -57,14 +58,14 @@ def classify_ticket(description: str) -> dict | None:
         return None
 
     try:
-        genai.configure(api_key=api_key)
-        model = genai.GenerativeModel('gemini-2.0-flash')
+        client = genai.Client(api_key=api_key)
 
         prompt = CLASSIFY_PROMPT.replace('__DESCRIPTION__', description)
 
-        response = model.generate_content(
-            prompt,
-            generation_config=genai.types.GenerationConfig(
+        response = client.models.generate_content(
+            model='gemini-2.0-flash',
+            contents=prompt,
+            config=types.GenerateContentConfig(
                 response_mime_type='application/json',
                 temperature=0.1,
                 max_output_tokens=150,

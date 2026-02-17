@@ -6,7 +6,7 @@ A full-stack support ticket management system with AI-powered ticket classificat
 
 | Layer | Technology |
 |-------|-----------|
-| Backend | Django 5.1 + Django REST Framework |
+| Backend | Django 6 + Django REST Framework |
 | Database | PostgreSQL 16 |
 | Frontend | React 18 (Vite) |
 | LLM | Google Gemini 2.0 Flash |
@@ -26,7 +26,8 @@ git clone <repo-url>
 cd Clootrack_Assignment
 
 # Set your Gemini API key (optional — app works without it)
-export GEMINI_API_KEY=your_api_key_here
+# Copy .env.example to .env and fill in your key
+cp .env.example .env
 
 # Start all services
 docker-compose up --build
@@ -134,6 +135,40 @@ The classification prompt (in `backend/tickets/llm.py`) includes:
 - Clear priority level guidelines based on impact severity
 - Instruction to return exactly two JSON fields
 - Low temperature (0.1) for deterministic, consistent classifications
+
+## Running Tests
+
+```bash
+# With Docker
+docker-compose exec backend python manage.py test
+
+# Local development
+cd backend
+source venv/bin/activate       # Linux/Mac
+.\venv\Scripts\Activate.ps1    # Windows PowerShell
+$env:USE_SQLITE="True"
+python manage.py test
+```
+
+## Local Development (without Docker)
+
+```bash
+# Backend
+cd backend
+python -m venv venv
+source venv/bin/activate       # Linux/Mac
+.\venv\Scripts\Activate.ps1    # Windows PowerShell
+pip install -r requirements.txt
+$env:USE_SQLITE="True"         # PowerShell (or export USE_SQLITE=True on Linux)
+$env:GEMINI_API_KEY="your_key" # Optional
+python manage.py migrate
+python manage.py runserver
+
+# Frontend (separate terminal)
+cd frontend
+npm install
+npm run dev
+```
 
 ## Project Structure
 

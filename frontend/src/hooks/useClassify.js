@@ -7,6 +7,11 @@ export function useClassify() {
   const [error, setError] = useState(null);
   const timerRef = useRef(null);
 
+  // Cleanup debounce timer on unmount to prevent memory leaks
+  const cleanup = useCallback(() => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+  }, []);
+
   const classify = useCallback((text) => {
     if (timerRef.current) clearTimeout(timerRef.current);
     setError(null);
@@ -35,5 +40,5 @@ export function useClassify() {
     setError(null);
   }, []);
 
-  return { classify, isClassifying, suggestion, error, resetSuggestion };
+  return { classify, isClassifying, suggestion, error, resetSuggestion, cleanup };
 }
