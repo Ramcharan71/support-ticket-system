@@ -29,7 +29,7 @@ services:
       - DB_PORT=5432
       - DJANGO_SECRET_KEY=change-me-in-production-use-a-real-secret-key
       - DEBUG=True
-      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - GEMINI_API_KEY=AIzaSyDcwRj-BZkjO1btiu7nnqAKTaDejDOJG2A
     depends_on:
       db:
         condition: service_healthy
